@@ -21,6 +21,7 @@
     ],
     "scripts": {
         "start": "electron .",
+        "snapshot": "node snapshot.js",
         "pack": "electron-builder --dir",
         "dist:win": "electron-builder --win --x64 --ia32",
         "dist:mac": "electron-builder --mac",
