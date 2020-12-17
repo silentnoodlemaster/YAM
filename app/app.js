@@ -1,9 +1,5 @@
 "use strict";
 
-// Use code cache
-// https://dev.to/xxczaki/how-to-make-your-electron-app-faster-4ifb
-require("v8-compile-cache");
-
 // Core modules
 const path = require("path");
 const fs = require("fs");
