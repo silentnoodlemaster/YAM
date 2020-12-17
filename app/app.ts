@@ -1,25 +1,25 @@
 "use strict";
 
 // Core modules
-const path = require("path");
-const fs = require("fs");
+import * as path from "path";
+import * as fs from "fs";
 
 // Public modules from npm
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
-const { autoUpdater } = require("electron-updater");
-const logger = require("electron-log");
-const Store = require("electron-store");
+import { app, BrowserWindow, ipcMain, dialog } from "electron";
+import { autoUpdater } from "electron-updater";
+import logger from "electron-log";
+import * as Store from "electron-store";
 
 // Modules from file
-const { run, openLink, readFileSync} = require("./src/scripts/io-operations.js");
-const shared = require("./src/scripts/classes/shared.js");
-const RecommendationEngine = require("./src/scripts/classes/recommendation-engine.js");
-const localization = require("./src/scripts/localization.js");
-const windowCreator = require("./src/scripts/window-creator.js");
-const GameDataStore = require("./db/stores/game-data-store.js");
-const ThreadDataStore = require("./db/stores/thread-data-store.js");
-const updater = require("./src/scripts/updater.js");
-const reportError = require("./src/scripts/error-manger.js").reportError;
+import { run, openLink, readFileSync } from "./src/scripts/io-operations.js";
+import * as shared from "./src/scripts/classes/shared.js";
+import RecommendationEngine from "./src/scripts/classes/recommendation-engine.js";
+import localization from "./src/scripts/localization.js";
+import windowCreator from "./src/scripts/window-creator.js";
+import GameDataStore from "./db/stores/game-data-store.js";
+import ThreadDataStore from "./db/stores/thread-data-store.js";
+import updater from "./src/scripts/updater.js";
+import {reportError} from "./src/scripts/error-manger.js");
 
 // Manage unhandled errors
 process.on("uncaughtException", function (error) {
@@ -30,7 +30,7 @@ process.on("uncaughtException", function (error) {
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+let mainWindow: BrowserWindow;
 
 // Global store, keep user-settings
 const store = new Store();
@@ -116,7 +116,7 @@ ipcMain.handle("user-data", function ipcOnUserData() {
  * Load the credentials from disk.
  * @return {Promise<Object.<string, string>>}
  */
-function getCredentials() {
+function getCredentials(): Promise<{ [s: string]: string; }> {
     // Parse credentials
     const json = readFileSync(shared.credentialsPath);
     return json ? JSON.parse(json) : null;
@@ -193,7 +193,7 @@ ipcMain.handle("current-language", function ipcMainHandleCurrentLanguage() {
  * Max number of element in the results
  * @returns {Promise<Any>} Results of the query
  */
-async function executeDbQuery(db, operation, args) {
+async function executeDbQuery(db: GameDataStore | ThreadDataStore, operation, args: {id: number}) {
     logger.silly(`Executing ${operation} on '${db}'`);
     
     // Prepare a dictionary of functions
@@ -230,7 +230,7 @@ async function executeDbQuery(db, operation, args) {
  * @param {String} name `game`, `thread`, `update`
  * @returns {GameDataStore|ThreadDataStore} Selected database
  */
-function selectDatabase(name) {
+function selectDatabase(name: string): GameDataStore | ThreadDataStore {
     // Local variables
     const dbs = {
         game: gameStore,
@@ -464,7 +464,7 @@ function messageBoxCloseCallback() {
  * Callback used to log the result of the update of a game.
  * @param {Boolean} finalized 
  */
-function updateMessageBoxCloseCallback(finalized) {
+function updateMessageBoxCloseCallback(finalized: boolean) {
     if (finalized) {
         logger.silly("Update finalized by the user");
     }

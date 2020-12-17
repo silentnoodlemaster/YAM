@@ -1,14 +1,10 @@
 "use strict";
 
 // Core modules
-const {
-    join
-} = require("path");
+import { join } from "path";
 
 // Public modules from npm
-const {
-    app
-} = require("electron");
+import { app } from "electron";
 
 /**
  * Class containing variables shared between modules.
@@ -19,37 +15,37 @@ class Shared {
      * Base directory where to save the application cache.
      * @type String
      */
-    static #_cacheDir = join(app.getPath("userData"), "appcache");
+    static _cacheDir: string = join(app.getPath("userData"), "appcache");
     /**
      * Name of the directory containing the preview of the games.
      * @type String
      */
-    static #_previewDirName = "preview";
+    static _previewDirName: string = "preview";
     /**
      * Name of the directory containing the exported game saves.
      * @type String
      */
-    static #_exportedGameSavesDirName = "gamesaves";
+    static _exportedGameSavesDirName: string = "gamesaves";
     /**
      * Name of the file to save the credentials for accessing the F95Zone portal.
      * @type String
      */
-    static #_credentialsName = "credentials.json";
+    static _credentialsName: string = "credentials.json";
     /**
      * Name of the database containing the data of the games.
      * @type String
      */
-    static #_gameDbName = "games.db";
+    static _gameDbName: string = "games.db";
     /**
      * Name of the database containing the data of the threads.
      * @type String
      */
-    static #_threadDbName = "threads.db";
+    static _threadDbName: string = "threads.db";
     /**
      * Name of the database containing the data of the game updates.
      * @type String
      */
-    static #_updateDbName = "updates.db";
+    static _updateDbName: string = "updates.db";
     //#endregion Private static properties
 
     //#region Getters
@@ -57,59 +53,59 @@ class Shared {
      * Base directory where to save the application cache.
      * @returns {String}
      */
-    static get cacheDir() {
-        return this.#_cacheDir;
+    static get cacheDir(): string {
+        return this._cacheDir;
     }
     /**
      * Path to directory containing the preview of the games.
      * @returns {String}
      */
-    static get previewDir() {
-        return join(this.#_cacheDir, this.#_previewDirName);
+    static get previewDir(): string {
+        return join(this._cacheDir, this._previewDirName);
     }
     /**
      * Path to directory containing the exported game saves.
      * @returns {String}
      */
-    static get exportedGameSavesDirName() {
-        return join(this.#_cacheDir, this.#_exportedGameSavesDirName);
+    static get exportedGameSavesDirName(): string {
+        return join(this._cacheDir, this._exportedGameSavesDirName);
     }
     /**
      * Path to file containing the credentials for accessing the F95Zone portal.
      * @returns {String}
      */
-    static get credentialsPath() {
-        return join(this.#_cacheDir, this.#_credentialsName);
+    static get credentialsPath(): string {
+        return join(this._cacheDir, this._credentialsName);
     }
 
     /**
      * Path to database containing the data of the games.
      * @returns {String}
      */
-    static get gameDbPath() {
-        return join(this.#_cacheDir, this.#_gameDbName);
+    static get gameDbPath(): string {
+        return join(this._cacheDir, this._gameDbName);
     }
 
     /**
      * Path to database containing the data of the threads.
      * @returns {String}
      */
-    static get threadDbPath() {
-        return join(this.#_cacheDir, this.#_threadDbName);
+    static get threadDbPath(): string {
+        return join(this._cacheDir, this._threadDbName);
     }
 
     /**
      * Path to database containing the data of the game updates.
      * @returns {String}
      */
-    static get updateDbPath() {
-        return join(this.#_cacheDir, this.#_updateDbName);
+    static get updateDbPath(): string {
+        return join(this._cacheDir, this._updateDbName);
     }
     //#endregion Getters
 
     //#region Setters
     static set cacheDir(val) {
-        this.#_cacheDir = val;
+        this._cacheDir = val;
     }
     //#endregion Setters
 }

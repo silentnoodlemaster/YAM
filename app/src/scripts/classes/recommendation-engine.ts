@@ -1,13 +1,17 @@
 "use strict";
 
 // Public modules from npm
-const F95API = require("f95api");
+import { login, getLatestUpdates } from "f95api";
 
 // Modules from file
-const GameInfoExtended = require("./game-info-extended.js");
-const reportError = require("../error-manger.js").reportError;
+import GameInfoExtended from "./game-info-extended.js";
+import { reportError } from "../error-manger.js";
 
 class RecommendationEngine {
+    // Class variables
+    _gameStore: any;
+    _threadStore: any;
+    _credentials: any;
     /**
      * @param {Object} credentials Credentials of the F95Zone platform
      * @param {String} credentials.username Username of the F95Zone platform
@@ -15,7 +19,7 @@ class RecommendationEngine {
      * @param {GameDataStore} gameStore Store of the games information
      * @param {ThreadDataStore} threadStore Store of the threads information
      */
-    constructor(credentials, gameStore, threadStore) {
+    constructor(credentials: Object, gameStore: GameDataStore, threadStore: ThreadDataStore) {
         this._gameStore = gameStore;
         this._threadStore = threadStore;
         this._credentials = credentials;
@@ -193,11 +197,11 @@ class RecommendationEngine {
         const tags = this._mostFrequent(merged, MAX_TAGS);
 
         // Login
-        const result = await F95API.login(this._credentials.username, this._credentials.password);
+        const result = await login(this._credentials.username, this._credentials.password);
         if(result.success) {
             do {
                 // Get the games that match with tags
-                const games = await F95API.getLatestUpdates({
+                const games = await getLatestUpdates({
                     tags: tags,
                     sorting: "rating"
                 }, MAX_FETCHED_GAMES)
@@ -223,4 +227,4 @@ class RecommendationEngine {
     }
 }
 
-module.exports = RecommendationEngine;
+export default RecommendationEngine;
