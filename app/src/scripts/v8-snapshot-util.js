@@ -4,17 +4,11 @@
 // Core modules
 const path = require("path");
 
-console.log("snapshotResult:", snapshotResult);
 if (typeof snapshotResult !== "undefined") {
     console.log("snapshotResult available!", snapshotResult);
 
     const Module = require("module");
-    const entryPointDirPath = path.resolve(
-        global.require.resolve("electron-updater"),
-        "..",
-        "..",
-        ".."
-    );
+    const entryPointDirPath = "node_modules";
     console.log("entryPointDirPath:", entryPointDirPath);
 
     Module.prototype.require = function (module) {
