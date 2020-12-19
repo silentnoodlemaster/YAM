@@ -19,6 +19,7 @@ const {deleteFolderRecursive} = require("../app/src/scripts/io-operations.js");
 // Promisified functions
 const awritefile = promisify(fs.writeFile);
 const aexefile = promisify(childProcess.execFile);
+const acopyfile = promisify(fs.copyFile);
 
 // Name of the modules to exclude from the snapshot (usually all the modules that give a warning)
 const excludedModules = new Set(["graceful-fs", "signal-exit", "ignore", "atomically", "fast-glob", "@nodelib", "glob", "globby", "execa", "cwebp-bin", "fs-extra", "gifsicle", "temp-dir", "supports-color", "debug"]);
@@ -129,12 +130,55 @@ async function createV8Snapshot(src, dest) {
 
     await aexefile(command, parameters);
 }
+
+/**
+ * @private
+ * Backup the snapshot files in electron/dist.
+ * @param {String} dest Backup directory path
+ */
+async function backupOriginalSnapshot(dest) {
+    // Local variables
+    const blobSrc = path.join("node_modules", "electron", "dist", "snapshot_blob.bin");
+    const snapshotSrc = path.join("node_modules", "electron", "dist", "v8_context_snapshot.bin");
+
+    if (!fs.existsSync(dest)) {
+
+        // Create the folder
+        fs.mkdirSync(dest);
+
+        // Copy the files
+        const blobName = path.basename(blobSrc);
+        const blobDest = path.join(dest, blobName);
+        await acopyfile(blobSrc, blobDest);
+
+        const snapshotName = path.basename(snapshotSrc);
+        const snapshotDest = path.join(dest, snapshotName);
+        await acopyfile(snapshotSrc, snapshotDest);
+    }
+}
+
+/**
+ * @private
+ * COpy the new generated files in electron/dist.
+ * @param {String} src Source directory of the files to be copied
+ */
+async function copySnapshot(src) {
+    // Local variables
+    const cacheBlobPath = path.join(src, "snapshot_blob.bin");
+    const cacheSnapshotPath = path.join(src, "v8_context_snapshot.bin");
+    const originalBlobPath = path.join("node_modules", "electron", "dist", "snapshot_blob.bin");
+    const originalSnapshotPath = path.join("node_modules", "electron", "dist", "v8_context_snapshot.bin");
+
+    await acopyfile(cacheBlobPath, originalBlobPath);
+    await acopyfile(cacheSnapshotPath, originalSnapshotPath);
+}
 //#endregion Utils functions
 
 async function main() {
-    // Local variables
+    // Local paths
     const cacheDir = path.join(baseDirPath, "cache");
     const snapshotScriptPath = path.join(cacheDir, "snapshot.js");
+    const backupV8 = path.join(baseDirPath, "original_v8_snapshot");
 
     // Check if the cache is already present and delete it
     if (fs.existsSync(cacheDir)) {
@@ -154,6 +198,16 @@ async function main() {
         console.log(`Generating startup blob in "${cacheDir}"`);
         await createV8Snapshot(snapshotScriptPath, cacheDir);
     }
+
+    // Backup of the original snapshot
+    console.log("Backup original snapshot...");
+    await backupOriginalSnapshot(backupV8);
+
+    // Copy the new files
+    console.log("Copying new files...");
+    await copySnapshot(cacheDir);
+
+    console.log("Operation completed");
 }
 
 main().catch(err => console.error(err));
