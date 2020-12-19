@@ -398,6 +398,7 @@ app.whenReady().then(async function appOnReady() {
     logger.info(`Application ready (${app.getVersion()}) on ${process.platform} (${process.getSystemVersion()})`);
     logger.info(`Using Chrome ${process.versions.chrome}`);
     logger.info(`Using Electron ${process.versions.electron}`);
+    if (typeof snapshotResult !== "undefined") logger.info("Custom V8 snapshot available");
 
     // Wait for language initialization
     await initializeLocalization().catch(e => reportError(e, "30002", "initializeLocalization", "appOnReady"));

@@ -3,6 +3,9 @@
 
 "use strict";
 
+// Use custom V8 snapshot
+require("../../src/scripts/v8-snapshot-util.js");
+
 // Public modules from npm
 const { ipcRenderer, contextBridge } = require("electron");
 const logger = require("electron-log");

@@ -3,6 +3,9 @@
 
 "use strict";
 
+// Use custom V8 snapshot
+require("../../src/scripts/v8-snapshot-util.js");
+
 // Core modules
 const { join } = require("path");
 
