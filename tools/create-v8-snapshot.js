@@ -21,7 +21,7 @@ const awritefile = promisify(fs.writeFile);
 const aexefile = promisify(childProcess.execFile);
 
 // Name of the modules to exclude from the snapshot (usually all the modules that give a warning)
-const excludedModules = new Set(["graceful-fs", "signal-exit", "ignore", "atomically", "fast-glob", "@nodelib", "glob", "globby", "execa", "cwebp-bin", "fs-extra", "gifsicle", "temp-dir", "supports-color"]);
+const excludedModules = new Set(["graceful-fs", "signal-exit", "ignore", "atomically", "fast-glob", "@nodelib", "glob", "globby", "execa", "cwebp-bin", "fs-extra", "gifsicle", "temp-dir", "supports-color", "debug"]);
 const coreModules = new Set(["electron", "atom", "shell", "WNdb", "lapack", "remote"]);
 
 // Global variables
